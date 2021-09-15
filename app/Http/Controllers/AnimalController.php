@@ -11,6 +11,11 @@ class AnimalController extends Controller
     public function cadastrar(Request $request){
         $dadosAnimal = $request->input();
         $id = $request->session()->get('id');
+
+        if(!$id){
+            return response()->json(['erro' => 'dados incorretos'], 406);
+        }
+
         $cliente = Cliente::find($id);
         $animal = new Animal();
         $animal->setFromArray($dadosAnimal);
@@ -20,20 +25,35 @@ class AnimalController extends Controller
 
     public function alterar(Request $request){
         $dadosAnimal = $request->input();
-        $animal = Animal::find($dadosAnimal['id']);
+        $id = $request->session()->get('id');
+
+        if(!$id){
+            return response()->json(['erro' => 'dados incorretos'], 406);
+        }
+
+        $cliente = Cliente::find($id);
+        $animal = $cliente->animais()->find($dadosAnimal['id']);
 
         if($animal == null){
             return response()->json(['erro' => 'animal não encontrado'], 404);
         }
 
         $animal->setFromArray($dadosAnimal);
-        $animal->save();
+        $cliente->animal->save($animal);
 
         return response()->json($animal, 200);
     }
 
     public function deletar($id){
-        $animal = Animal::find($id);
+        $dadosAnimal = $request->input();
+        $id = $request->session()->get('id');
+
+        if(!$id){
+            return response()->json(['erro' => 'dados incorretos'], 406);
+        }
+
+        $cliente = Cliente::find($id);
+        $animal = $cliente->animais()->find($dadosAnimal['id']);
 
         if($animal == null){
             return response()->json(['erro' => 'animal não encontrado'], 404);
