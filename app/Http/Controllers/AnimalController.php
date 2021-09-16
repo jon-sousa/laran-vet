@@ -39,26 +39,27 @@ class AnimalController extends Controller
         }
 
         $animal->setFromArray($dadosAnimal);
-        $cliente->animal->save($animal);
+        $cliente->animais()->save($animal);
 
         return response()->json($animal, 200);
     }
 
-    public function deletar($id){
-        $dadosAnimal = $request->input();
-        $id = $request->session()->get('id');
+    public function deletar(Request $request, $id){
+        $clienteId = $request->session()->get('id');
 
-        if(!$id){
+        if(!$id || !$clienteId){
             return response()->json(['erro' => 'dados incorretos'], 406);
         }
 
-        $cliente = Cliente::find($id);
-        $animal = $cliente->animais()->find($dadosAnimal['id']);
+        $cliente = Cliente::find($clienteId);
+        $animal = $cliente->animais()->find($id);
 
         if($animal == null){
             return response()->json(['erro' => 'animal não encontrado'], 404);
         }
 
+        $animal->consultas()->delete();
+        $animal->vacinas()->delete();
         $animal->delete();
 
         return response()->json(['resposta' => 'animal deletado com sucesso'], 200);

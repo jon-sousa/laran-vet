@@ -19,6 +19,11 @@ class ClienteController extends Controller
         extract($credentials);
 
         $cliente = Cliente::where(['email'=> $email])->first();
+
+        if($cliente == null){
+            return response()->json(['Erro' => 'credenciais incorretas'], 403);
+        }
+
         $cliente->atualizaComDadosDB();
 
         if(Auth::guard('cliente')->attempt(['email'=>$email, 'password'=>$password])) {
