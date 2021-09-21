@@ -47,6 +47,17 @@ class ClienteController extends Controller
         return response()->json(['resposta' => 'cliente deslogado com sucesso'], 200);
     }
 
+    public function estaLogado(Request $request){
+        
+        $sessaoId = $request->session()->get('id');
+
+        if($sessaoId != null && $sessaoId != ''){
+            return response()->json(['resposta' => 'cliente deslogado com sucesso'], 200);
+        }
+        
+        return response()->json(['erro' => 'cliente nao esta logado'], 401);
+    }
+
     public function cadastrar(Request $request){
         $dadosCliente = $request->input();
         $dadosCliente['password'] = Hash::make($dadosCliente['password']);

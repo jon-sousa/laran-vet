@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->get('animais/buscar/{id}', [AnimalController:
 
 Route::post('cliente/cadastrar', [ClienteController::class, 'cadastrar']);
 Route::post('cliente/login', [ClienteController::class, 'login']);
+Route::get('cliente/esta-logado', [ClienteController::class, 'estaLogado']);
 Route::middleware('auth:sanctum')->get('cliente/logout', [ClienteController::class, 'logout']);
 Route::middleware('auth:sanctum')->get('cliente/animais', [AnimalController::class, 'buscarPorCliente']);
 Route::middleware('auth:sanctum')->get('cliente/animal/{animalId}', [AnimalController::class, 'buscarUmPorCliente']);
